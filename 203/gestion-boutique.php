@@ -1,24 +1,24 @@
 <?php
+include_once 'db.php';
 
 function ajouterBoutique($nom, $ville, $pays, $numero_rue, $utilisateur_id, $nom_adresse, $code_postal) {
-
-    $boutiquesExistantes = dbquery("SELECT * FROM boutiques WHERE id = ?", $_GET["id"]);
-
-    if ($boutiquesExistantes["id"]) {
-            echo "Erreur lors de l'ajout de la boutique.";
-            return false;
-        }
-    else {
-
-        $param = [$nom, $ville, $pays, $numero_rue, $utilisateur_id, $nom_adresse, $code_postal];
-        dbquery("INSERT INTO boutiques (nom, ville, pays, numero_rue, utilisateur_id, nom_adresse, code_postal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", $param);
+    $boutiquesExistantes = dbquery("SELECT * FROM boutiques WHERE nom = ?", [$nom]);
+    if (count($boutiquesExistantes) > 0) {
+        echo "Erreur : une boutique avec ce nom existe déjà.";
+        return false;
+    }
+    $param = [$nom, $ville, $pays, $numero_rue, $utilisateur_id, $nom_adresse, $code_postal];
+    $result = dbquery("INSERT INTO boutiques (nom, ville, pays, numero_rue, utilisateur_id, nom_adresse, code_postal) VALUES (?, ?, ?, ?, ?, ?, ?)", $param);
+    if ($result !== false) {
         echo "Boutique ajoutée avec succès !";
-
+        return true;
+    } else {
+        echo "Erreur lors de l'ajout de la boutique.";
+        return false;
     }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
     $nom = $_POST['nom'];
     $ville = $_POST['ville'];
     $pays = $_POST['pays'];
@@ -26,12 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $utilisateur_id = $_POST['utilisateur_id'];
     $nom_adresse = $_POST['nom_adresse'];
     $code_postal = $_POST['code_postal'];
-    $gerant = $_POST['gerant'];
-    $id = $_POST['id'];
-
-    ajouterBoutique($nom, $ville, $pays, $numero_rue, $utilisateur_id, $nom_adresse, $code_postal, $gerant);
+    ajouterBoutique($nom, $ville, $pays, $numero_rue, $utilisateur_id, $nom_adresse, $code_postal);
 }
-
 ?>
 
 <!DOCTYPE html>

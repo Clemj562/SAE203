@@ -1,43 +1,34 @@
 <?php
+include_once 'db.php';
 
-function ajouterProduit($nom, $description, $illustration, $type, $prix, $id) {
-
-    $confiseriesExistantes = dbquery("SELECT * FROM confiseries WHERE nom = ?", $GET_[$nom]);
-
+function ajouterProduit($nom, $description, $illustration, $type, $prix) {
+    $confiseriesExistantes = dbquery("SELECT * FROM confiseries WHERE nom = ?", [$nom]);
     if (count($confiseriesExistantes) > 0) {
         echo "Erreur : une confiserie avec ce nom existe déjà.";
-        return false; 
-    } 
-
-    else {
-        $result = dbquery(
-            "INSERT INTO confiseries (nom, description, illustration, type, prix) VALUES (?, ?, ?, ?, ?)",
-            [$nom, $description, $illustration, $type, $prix, $id]
-        );
-
-        if ($result) {
-            
-            return true;
-        } else {
-            echo "Erreur lors de l'ajout de la confiserie.";
-            return false;
-        }
+        return false;
+    }
+    // On suppose que l'ID est auto-incrémenté
+    $result = dbquery(
+        "INSERT INTO confiseries (nom, description, illustration, type, prix) VALUES (?, ?, ?, ?, ?)",
+        [$nom, $description, $illustration, $type, $prix]
+    );
+    if ($result !== false) {
+        echo "Produit ajouté avec succès.";
+        return true;
+    } else {
+        echo "Erreur lors de l'ajout de la confiserie.";
+        return false;
     }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
     $nom = $_POST['nom'];
     $description = $_POST['description'];
     $illustration = $_POST['illustration'];
     $prix = $_POST['prix'];
     $type = $_POST['type'];
-    $id = $_POST['id'];
-
-    $succes = ajouterProduit($nom, $description, $illustration, $type, $prix, $id);
-    
+    ajouterProduit($nom, $description, $illustration, $type, $prix);
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -67,10 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div>
             <label>Type :</label>
             <input type="text" name="type">
-        </div>
-        <div>
-            <label>ID :</label>
-            <input type="text" name="id">
         </div>
         <button type="submit">Ajouter</button>
     </form>
