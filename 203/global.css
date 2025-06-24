@@ -1,0 +1,52 @@
+:root {
+  --primary-color: #0080C9;
+  --secondary-color: #E26CA0;
+  --third-color: #FDD7D7;
+  --fourth-color: #6AC5D7;
+  --fivth-color: #ffd98d;
+  --primary-font: "Chewy", system-ui;
+  --secondary-font: 'Arial', sans-serif;
+  --color-font: black;
+  /* --title-font-color : ;
+    --second-title-font-color:;
+    --title-font-size : ;
+    --second-title-font-size:;
+    --text-font-color :;
+    --text-font-size :; */
+}
+
+.chewy-regular {
+  font-family: "Chewy", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.titre {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.titre h2 {
+  font-size: 4rem;
+  margin-bottom: 0rem;
+  color: var(--primary-color);
+  text-transform: uppercase;
+}
+
+.titre h4 {
+  font-size: 1.5rem;
+  color: var(--secondary-color);
+  margin-bottom: 3rem;
+}
+
+h2 {
+  text-align: center;
+  color: var(--title-font-color);
+  font-size: 3rem;
+  margin-bottom: 40px;
+  font-weight: 700;
+}

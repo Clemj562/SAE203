@@ -1,0 +1,134 @@
+.produit {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  overflow: visible;
+  transition: all 0.3s ease;
+  margin-bottom: 25px;
+  width: 100%;
+  max-width: 280px;
+  text-align: center;
+  position: relative; 
+  z-index: 1;
+}
+
+.produit:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  z-index: 10; 
+}
+
+
+.fond {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: visible; 
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  border-radius: 20px 20px 0 0;
+}
+
+.fond a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.fond img {
+  max-width: 85%;
+  max-height: 85%;
+  object-fit: contain;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-radius: 8px;
+  position: relative;
+  z-index: 3;
+}
+
+.fond:hover img {
+  transform: scale(1.25); 
+}
+
+.contenu-carte {
+  padding: 20px 15px;
+  background: #fff;
+  border-radius: 0 0 20px 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.contenu-carte h1 {
+  font-size: 1.3em;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 15px 0;
+  line-height: 1.2;
+  text-transform: capitalize;
+}
+
+.contenu-carte p {
+  margin: 8px 0;
+  line-height: 1.4;
+}
+
+
+.contenu-carte p:nth-of-type(1) {
+  display: inline-block;
+  background: #bdc3c7;
+  color: #fff;
+  font-size: 1.1em;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 25px;
+  margin: 10px 0 15px 0;
+  min-width: 80px;
+}
+
+
+.contenu-carte p:nth-of-type(2) {
+  color: #7f8c8d;
+  font-size: 0.9em;
+  line-height: 1.5;
+  margin-top: 10px;
+}
+
+
+.catalogue {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  padding: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.boutique-buttons {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+/*LES BOUTONS DU CATALOGUE POUR LES BOUTIQUES*/
+
+.boutique-buttons .hero-btn {
+  background-color: var(--primary-color);
+  border-radius: 10px;
+  color: white;
+  font-size: 1.5rem;
+  padding: 1rem;;
+  border: transparent;
+  transition: background-color ease 0.3s;
+}
+
+.boutique-buttons .hero-btn:hover {
+  background-color: var(--secondary-color);
+  transition: background-color ease 0.3s;
+}

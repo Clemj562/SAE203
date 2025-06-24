@@ -1,0 +1,102 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* HEADER */
+
+#icon {
+    border-radius: 100%;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 20px rgba(23, 23, 26, 0.08);
+}
+
+.contenu-header {
+    max-width: 1200px;
+    width: 100%;
+    padding: 1.2rem 2rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-nav a:hover,
+.header-nav a:focus {
+    color: rgb(120, 2, 61);
+    background: none;
+    border: none;
+    transition: color 0.2s;
+}
+
+#logo-header {
+    width: 100px;
+    height: 90px;
+    border-radius: 100%;
+    filter: drop-shadow(0 4px 8px var(--third-color));
+    transition: transform ease 0.3s, filter ease 0.5s;
+}
+
+#logo-header:hover {
+    transform: scale(1.1) rotate(5deg);
+    filter: drop-shadow(0 6px 12px var(--fourth-color));
+    cursor: pointer;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 3rem;
+    align-items: center;
+    height: 100%;
+    margin-left: 5.2rem;
+}
+
+nav a {
+    color: var(--color-font);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+#btn-login {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    text-decoration: none;
+}
+
+#connexion {
+    background-color: var(--third-color);
+    color: white;
+    border: none;
+    padding: 15px 28px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(68, 160, 141, 0.25);
+    border: 1px solid transparent;
+    transition: background-color ease 0.3s, transform ease 0.3s;
+}
+
+
+#connexion:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(68, 160, 141, 0.35);
+    background-color: var(--primary-color);
+    text-decoration: none;
+}
