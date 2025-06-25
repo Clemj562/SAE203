@@ -10,7 +10,9 @@ include_once 'db.php';
 <link rel="stylesheet" href="index.css">
 <link rel="stylesheet" href="global.css">
 
-<link href="https://fonts.googleapis.com/css2?family=Corinthia:wght@400;700&family=Great+Vibes&family=Kaushan+Script&family=Yatra+One&display=swap" rel="stylesheet">
+<link
+    href="https://fonts.googleapis.com/css2?family=Corinthia:wght@400;700&family=Great+Vibes&family=Kaushan+Script&family=Yatra+One&display=swap"
+    rel="stylesheet">
 
 <?php
 
@@ -29,6 +31,8 @@ $boutiques_gerant = dbquery("
                 FROM boutiques 
                 WHERE utilisateur_id = ?
             ", [$user_id]);
+
+$boutiques_select = dbquery("SELECT id, nom FROM boutiques ORDER BY nom ASC");
 ?>
 
 
@@ -37,63 +41,89 @@ $boutiques_gerant = dbquery("
         <section id="hero">
             <div class="hero-container">
                 <svg width="400" height="400">
-                    <circle cx="250" cy="200" r="180" fill="#ffffff" stroke="#ffffff" stroke-width="16"/>
+                    <circle cx="250" cy="200" r="180" fill="#ffffff" stroke="#ffffff" stroke-width="16" />
                 </svg>
                 <div class="hero-image">
                     <img src="./media/img/ourson.png" alt="Image d'Ourson">
                 </div>
+                
                 <div class="hero-content">
-                    <h1>Bienvenue <?php echo htmlspecialchars($ui['username']); ?> chez <span class="confiz">Confiz'</span></h1>
+                    <?php if ($user_connected && $ui): ?>
+                        <h1>Bienvenue <?php echo htmlspecialchars($ui['username']); ?> chez <span class="confiz">Confiz'</span></h1>
+                    <?php else: ?>
+                        <h1>Bienvenue chez <span class="confiz">Confiz'</span></h1>
+                    <?php endif; ?>
                     <p>Découvrez nos confiseries, différents choix pour différents goûts !</p>
                     <div class="hero-buttons">
                         <a href="catalogue.php?id-catalogue=1"><button class="hero-btn">Voir le catalogue</button></a>
                         <a href="boutique.php?id-boutique=1"><button class="hero-btn">Nos boutiques</button></a>
                     </div>
+                    <?php
+                    if ($user_connected && $user_role == 'admin') {
+                        // L'admin a accès à toutes les boutiques
+                        echo "<p>Vous avez les droits sur <strong>toutes les boutiques</strong> :</p><ul>";
+                        foreach ($boutiques_select as $bt) {
+                            echo "<li>" . htmlspecialchars($bt['nom']) . "</li>";
+                        }
+                        echo "</ul>";
+                    } elseif ($user_connected && $user_role == 'gerant') {
+                        // Le gérant a accès uniquement à ses boutiques
+                        if (!empty($boutiques_gerant)) {
+                            echo "<p>Vous gérez les boutiques suivantes :</p><ul>";
+                            foreach ($boutiques_gerant as $bg) {
+                                echo "<li>" . htmlspecialchars($bg['nom']) . "</li>";
+                            }
+                            echo "</ul>";
+                        } else {
+                            echo "<p>Vous ne gérez actuellement aucune boutique.</p>";
+                        }
+                    }
+                    ?>
                 </div>
             </div>
         </section>
         <img class="vague" src="./media/img/fond-confiz.jpg" alt="vague illustration">
-<?php if ($user_connected && isset($ui)): ?>
-    
-    <?php if ($user_role === 'admin'): ?>
+        <?php if ($user_connected && isset($ui)): ?>
+
+        <?php if ($user_role === 'admin'): ?>
         <div class="info-utilisateur">
             <h2>Bonjour <?php echo ($ui['username']); ?></h2>
             <h5>Vous avez des droits sur toutes les boutiques cher Admin !</h5>
         </div>
-    <?php endif; ?>
-            
-    <?php if ($user_role === 'gerant'): ?>
+        <?php endif; ?>
+
+        <?php if ($user_role === 'gerant'): ?>
         <div class="info-utilisateur">
             <h2>Bonjour <?php echo ($ui['username']); ?></h2>
             <h5>Voici vos boutiques :</h5>
-            
+
             <?php if (!empty($boutiques_gerant)): ?>
-                <ul class="liste-boutiques">
-                    <?php foreach ($boutiques_gerant as $btq): ?>
-                        <li>
-                            <a href="boutique.php?id-boutique=<?php echo $btq['id']; ?>" class="lien-boutique">
-                                <?php echo ($btq['nom']); ?>
-                            </a>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
+            <ul class="liste-boutiques">
+                <?php foreach ($boutiques_gerant as $btq): ?>
+                <li>
+                    <a href="boutique.php?id-boutique=<?php echo $btq['id']; ?>" class="lien-boutique">
+                        <?php echo ($btq['nom']); ?>
+                    </a>
+                </li>
+                <?php endforeach; ?>
+            </ul>
             <?php else: ?>
-                <p>Aucune boutique assignée pour le moment.</p>
+            <p>Aucune boutique assignée pour le moment.</p>
             <?php endif; ?>
         </div>
-    <?php endif; ?>
+        <?php endif; ?>
 
 
         <div class="message-index">
-           <h1>Vous cherchez un produit ?</h1>
-           <h4>C'est juste ici !</h4>
+            <h1>Vous cherchez un produit ?</h1>
+            <h4>C'est juste ici !</h4>
         </div>
-        
-<form method="GET" action="recherche-produit.php" class="barre-recherche">
-    <input type="text" name="q" placeholder="Rechercher une confiserie..." required>
-    <button type="submit">🔍</button>
-</form>
-<?php endif; ?>
+
+        <form method="GET" action="recherche-produit.php" class="barre-recherche">
+            <input type="text" name="q" placeholder="Rechercher une confiserie..." required>
+            <button type="submit">🔍</button>
+        </form>
+        <?php endif; ?>
 
         <section id="best-sellers">
             <div class="bs-produit">
@@ -124,46 +154,52 @@ $boutiques_gerant = dbquery("
         </section>
 
         <section id="A-propos">
-        <div class="bio-container">
-            <div class="bio-logo-box">
-                <img src="./media/img/logoconfiz.png" alt="Logo Confiz" class="bio-logo">
-            </div>
-            
-            <div class="bio-content" id="mini-bio">
-                <h1 class="bio-titre">Mini bio</h1>
-                <h3 class="bio-sous-titre">Des informations sucrées sur nous ?</h3>
-                <p class="bio-description">
-                    Jeff Beyoff, franco américain, arrivé à Paris pour des études de marketing, décide de créer en 2012 la société « Confiz », une centrale d'achat de confiseries. Camarade de Jack Dermitt, héritier de la société allemande « Haribo », il choisit d'exploiter le catalogue produit de la société de son ami pour offrir au réseau de magasins franchisés qu'il construit, la possibilité de gérer leur réapprovisionnement très simplement : en ligne !
-                    <br><br>
-                    Si le catalogue repose essentiellement sur des produits « Haribo » Jeff Beyoff souhaite que l'identité de Confiz prédomine. Une identité « festive » à l'image de ce que Jeff veut apporter à ses revendeurs.
-                    <br><br>
-                    Après tout.. c'est Confiz, c'est sa plateforme ! qui permet la prise de commandes !
-                    <br><br>
-                    D'autre part, Jeff qui a une bonne connaissance de l'UX se préoccupe avant tout de la facilité pour tous revendeurs de passer leur commande. Il insiste sur la facilité de trouver les produits et de passer commande.
-                </p>
-            </div>
-        </div>
+            <div class="bio-container">
+                <div class="bio-logo-box">
+                    <img src="./media/img/logoconfiz.png" alt="Logo Confiz" class="bio-logo">
+                </div>
 
-</section>
-<section class="carte">
-    <?php include_once 'carte.php'?> 
-</section>
+                <div class="bio-content" id="mini-bio">
+                    <h1 class="bio-titre">Mini bio</h1>
+                    <h3 class="bio-sous-titre">Des informations sucrées sur nous ?</h3>
+                    <p class="bio-description">
+                        Jeff Beyoff, franco américain, arrivé à Paris pour des études de marketing, décide de créer en
+                        2012 la société « Confiz », une centrale d'achat de confiseries. Camarade de Jack Dermitt,
+                        héritier de la société allemande « Haribo », il choisit d'exploiter le catalogue produit de la
+                        société de son ami pour offrir au réseau de magasins franchisés qu'il construit, la possibilité
+                        de gérer leur réapprovisionnement très simplement : en ligne !
+                        <br><br>
+                        Si le catalogue repose essentiellement sur des produits « Haribo » Jeff Beyoff souhaite que
+                        l'identité de Confiz prédomine. Une identité « festive » à l'image de ce que Jeff veut apporter
+                        à ses revendeurs.
+                        <br><br>
+                        Après tout.. c'est Confiz, c'est sa plateforme ! qui permet la prise de commandes !
+                        <br><br>
+                        D'autre part, Jeff qui a une bonne connaissance de l'UX se préoccupe avant tout de la facilité
+                        pour tous revendeurs de passer leur commande. Il insiste sur la facilité de trouver les produits
+                        et de passer commande.
+                    </p>
+                </div>
+            </div>
+
+        </section>
+        <section class="carte">
+            <?php include_once 'carte.php'?>
+        </section>
     </main>
 
     <footer>
         <?php include_once 'footer.php'; ?>
     </footer>
 
-    
-<style>
-    
-body {
-    background-color: #ffffff;
-    margin: 0;
-    padding: 0;
-}
 
-</style>
+    <style>
+    body {
+        background-color: #ffffff;
+        margin: 0;
+        padding: 0;
+    }
+    </style>
 
 </body>
 
