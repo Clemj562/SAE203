@@ -23,7 +23,6 @@ include_once 'db.php';
 $user_connected = isset($_SESSION['user_id']);
 $user_role = $user_connected ? $_SESSION['user_role'] : null;
 $user_id = $user_connected ? $_SESSION['user_id'] : null;
-$id_boutique = 
 
 $boutiques = dbquery("SELECT id, nom, utilisateur_id AS uid, numero_rue, nom_adresse, code_postal, ville, pays FROM boutiques WHERE boutiques.id = ?", [$_GET['id-boutique']]);
 
@@ -49,28 +48,38 @@ $boutiques_select = dbquery("SELECT id, nom FROM boutiques ORDER BY nom ASC");
         <h4>Venez découvrir toutes nos boutiques !</h4>
     </div>
 
-    <form class="barre-recherche">
-        <select name="boutique" id="boutique-select" required>
+    <form class="barre-recherche" method="get" action="">
+        <select name="id-boutique" id="boutique-select" required onchange="this.form.submit()">
             <option value="">Sélectionnez une boutique...</option>
             <?php foreach ($boutiques_select as $bt): ?>
-                <option value="<?php echo ($bt['id']); ?>">
+                <option value="<?php echo ($bt['id']); ?>" <?php if (isset($_GET['id-boutique']) && $_GET['id-boutique'] == $bt['id']) echo 'selected'; ?>>
                     <?php echo ($bt['nom']); ?>
                 </option>
             <?php endforeach; ?>
         </select>
     </form>
 
-    <?php foreach ($boutiques as $b): ?>
     <?php
-     if (($user_connected && $user_role == 'admin') || ($user_connected && $user_role == 'gerant' && isset($b['uid']) && $b['uid'] == $user_id)): ?>
-        <button class="bouton btn-gestion-stock" data-magasin="<?php echo($b['nom'])?>" data-magasin-id="<?php echo($b['id'])?>">
-            Gestion des stocks
-        </button>
-    <?php endif; ?>
-    <?php endforeach; ?>
+    if (isset($_GET['id-boutique'])) {
+        foreach ($boutiques as $b) {
+            if ($b['id'] == $_GET['id-boutique'] &&
+                (
+                    ($user_connected && $user_role == 'admin') ||
+                    ($user_connected && $user_role == 'gerant' && isset($b['uid']) && $b['uid'] == $user_id)
+                )
+            ) {
+                ?>
+                <button class="bouton btn-gestion-stock" data-magasin="<?php echo htmlspecialchars($b['nom']); ?>" data-magasin-id="<?php echo (int)$b['id']; ?>">
+                    Gestion des stocks
+                </button>
+                <?php
+            }
+        }
+    }
+    ?>
 
- 
-        <button id="lien-page-retour"><- Retour à la page précédente</button> 
+
+        <button id="lien-page-retour"><- Retour à la page précédente</button>
 
         <?php foreach ($boutiques as $b): ?>
 
