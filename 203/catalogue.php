@@ -34,7 +34,9 @@ $boutiques_select = dbquery("SELECT id, nom FROM boutiques ORDER BY nom ASC");
 
   <div class="catalogue">
 
-    <?php foreach ($produits as $p) { ?>
+    <?php foreach ($produits as $p) { 
+    if ($p['quantite'] == 0) continue;
+?>
 
       <div class="produit">
         <div class="fond">
