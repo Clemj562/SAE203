@@ -10,12 +10,10 @@ include_once 'db.php';
 <link rel="stylesheet" href="boutique.css">
 
 <style>
-
 .btn-gestion-produit,
 .btn-gestion-boutique {
     display: none;
 }
-
 </style>
 
 <?php
@@ -52,9 +50,10 @@ $boutiques_select = dbquery("SELECT id, nom FROM boutiques ORDER BY nom ASC");
         <select name="id-boutique" id="boutique-select" required onchange="this.form.submit()">
             <option value="">Sélectionnez une boutique...</option>
             <?php foreach ($boutiques_select as $bt): ?>
-                <option value="<?php echo ($bt['id']); ?>" <?php if (isset($_GET['id-boutique']) && $_GET['id-boutique'] == $bt['id']) echo 'selected'; ?>>
-                    <?php echo ($bt['nom']); ?>
-                </option>
+            <option value="<?php echo ($bt['id']); ?>"
+                <?php if (isset($_GET['id-boutique']) && $_GET['id-boutique'] == $bt['id']) echo 'selected'; ?>>
+                <?php echo ($bt['nom']); ?>
+            </option>
             <?php endforeach; ?>
         </select>
     </form>
@@ -69,122 +68,127 @@ $boutiques_select = dbquery("SELECT id, nom FROM boutiques ORDER BY nom ASC");
                 )
             ) {
                 ?>
-                <button class="bouton btn-gestion-stock" data-magasin="<?php echo htmlspecialchars($b['nom']); ?>" data-magasin-id="<?php echo (int)$b['id']; ?>">
-                    Gestion des stocks
-                </button>
-                <?php
+    <button class="bouton btn-gestion-stock" data-magasin="<?php echo htmlspecialchars($b['nom']); ?>"
+        data-magasin-id="<?php echo (int)$b['id']; ?>">
+        Gestion des stocks
+    </button>
+    <?php
             }
         }
     }
     ?>
 
 
-        <button id="lien-page-retour"><- Retour à la page précédente</button>
+    <button id="lien-page-retour">
+        <- Retour à la page précédente</button>
 
-        <?php foreach ($boutiques as $b): ?>
+            <?php foreach ($boutiques as $b): ?>
 
-        <div class="magasin">
-            <div class="contenu-carte">
-                <div class="first-lign">
-                    <h1><?php echo($b['nom'])?></h1>
-                </div>
-                <p><?php echo($b['numero_rue']) . ' ' . $b['nom_adresse']?></p>
-                <p><?php echo($b['code_postal']) . ' ' . $b['ville']?></p>
-                <p><?php echo($b['pays'])?></p>
-                <?php if ($user_role == 'admin'): ?>
-                        <button class="btn-gestion-admin">BOUTON ADMIN</button>
-                        <button class="btn-gestion-produit">Les Confiseries</button>
-                        <button class="btn-gestion-boutique">Les Boutiques</button>
+            <div class="magasin">
+                <div class="contenu-carte">
+                    <div class="first-lign">
+                        <h1><?php echo($b['nom'])?></h1>
+                    </div>
+                    <p><?php echo($b['numero_rue']) . ' ' . $b['nom_adresse']?></p>
+                    <p><?php echo($b['code_postal']) . ' ' . $b['ville']?></p>
+                    <p><?php echo($b['pays'])?></p>
+                    <?php if ($user_role == 'admin'): ?>
+                    <button class="btn-gestion-admin">BOUTON ADMIN</button>
+                    <button class="btn-gestion-produit">Les Confiseries</button>
+                    <button class="btn-gestion-boutique">Les Boutiques</button>
                     <?php endif; ?>
+                </div>
+                <div class="contenu-image">
+                    <img src="media/img/imageBoutique1.jpg" alt="Image du Magasin">
+                </div>
             </div>
-            <div class="contenu-image">
-                <img src="media/img/imageBoutique1.jpg" alt="Image du Magasin">
+
+            <?php endforeach; ?>
+
+            <!-- SECTION PRODUITS -->
+
+            <div class="autres-produits">
+                <h2>Nos produits</h2>
+                <div class="produits-grid">
+                    <?php foreach($autres_produits as $ap): ?>
+                    <div class="produit-item">
+                        <a href="produit.php?id-bonbon=<?php echo($ap['id']); ?>"><img
+                                src="./media/img/<?php echo($ap['illustration'])?>" alt="<?php echo($ap['nom'])?>"></a>
+                        <h3><?php echo($ap['nom']); ?></h3>
+                        <p class="prix"><?php echo($ap['prix']); ?> €</p>
+                        <p>Sachet de <?php echo($ap['poids']); ?> g</p>
+                        <p class="stock">Stock: <?php echo($ap['quantite']); ?> unités</p>
+                        <a class="bs-produit" href="produit.php?id-bonbon=<?php echo($ap['id']); ?>">Voir ce produit</a>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <a href="catalogue.php?id-catalogue=<?php echo($_GET['id-boutique']); ?>">
+                    <button class="lien-catalogue">Voir tous nos produits</button>
+                </a>
             </div>
-        </div>
 
-<?php endforeach; ?>
+            <!-- POPUP ADMIN BOUTIQUE -->
 
-<!-- SECTION PRODUITS -->
-
-<div class="autres-produits">
-    <h2>Nos produits</h2>
-    <div class="produits-grid">
-        <?php foreach($autres_produits as $ap): ?>
-            <div class="produit-item">
-                <a href="produit.php?id-bonbon=<?php echo($ap['id']); ?>"><img src="./media/img/<?php echo($ap['illustration'])?>" alt="<?php echo($ap['nom'])?>"></a>
-                <h3><?php echo($ap['nom']); ?></h3>
-                <p class="prix"><?php echo($ap['prix']); ?> €</p>
-                <p>Sachet de <?php echo($ap['poids']); ?> g</p>
-                <p class="stock">Stock: <?php echo($ap['quantite']); ?> unités</p>
-                <a class="bs-produit" href="produit.php?id-bonbon=<?php echo($ap['id']); ?>">Voir ce produit</a>
-            </div>
-        <?php endforeach; ?>
-    </div>
-    <a href="catalogue.php?id-catalogue=<?php echo($_GET['id-boutique']); ?>">
-    <button class="lien-catalogue">Voir tous nos produits</button>
-</a>
-</div>
-
-<!-- POPUP ADMIN BOUTIQUE -->
-
-<?php if ($user_connected): ?>
-<div id="popup-boutiques" class="popup-boutiques popup-hide">
-    <div class="popup-overlay-boutiques"></div>
-    <div class="popup-content-boutiques">
-        <div class="popup-header-boutiques">
-            <h2>Gestion des boutiques - <span id="nom-magasin-boutiques"></span></h2>
-            <button class="btn-fermer-boutiques">&times;</button>
-        </div>
-        <div class="contenu-popup-boutiques">
-            <?php 
+            <?php if ($user_connected): ?>
+            <div id="popup-boutiques" class="popup-boutiques popup-hide">
+                <div class="popup-overlay-boutiques"></div>
+                <div class="popup-content-boutiques">
+                    <div class="popup-header-boutiques">
+                        <h2>Gestion des boutiques - <span id="nom-magasin-boutiques"></span></h2>
+                        <button class="btn-fermer-boutiques">&times;</button>
+                    </div>
+                    <div class="contenu-popup-boutiques">
+                        <?php 
             include_once 'gestion-boutique.php'; 
             ?>
-        </div>
-    </div>
-</div>
+                    </div>
+                </div>
+            </div>
 
-<!-- POPUP ADMIN PRODUIT -->
-<div id="popup-produit" class="popup-produit popup-hide">
-    <div class="popup-overlay-produit"></div>
-    <div class="popup-content-produit">
-        <div class="popup-header-produit">
-            <h2>Gestion des produits</h2>
-            <button class="btn-fermer-produit">&times;</button>
-        </div>
-        <div class="contenu-popup-produit">
-            <?php 
+            <!-- POPUP ADMIN PRODUIT -->
+            <div id="popup-produit" class="popup-produit popup-hide">
+                <div class="popup-overlay-produit"></div>
+                <div class="popup-content-produit">
+                    <div class="popup-header-produit">
+                        <h2>Gestion des produits</h2>
+                        <button class="btn-fermer-produit">&times;</button>
+                    </div>
+                    <div class="contenu-popup-produit">
+                        <?php 
             include_once 'gestion-produit.php'; 
             ?>
-        </div>
-    </div>
-</div>
+                    </div>
+                </div>
+            </div>
 
-<!-- POPUP GESTION DES STOCKS -->
+            <!-- POPUP GESTION DES STOCKS -->
 
-<div id="popup-stock" class="popup-stock popup-hide">
-    <div class="popup-overlay-stock"></div>
-    <div class="popup-content-stock">
-        <div class="popup-header-stock">
-            <h2>Gestion des stocks - <span id="nom-magasin-stock"></span></h2>
-            <button class="btn-fermer-stock">&times;</button>
-        </div>
-        <div class="contenu-stock">
-            <?php foreach ($stocks as $s): ?>
-        <div class="stock-item">
-            <span><?php echo htmlspecialchars($s['confiserie_nom']); ?> : <?php echo (int)$s['quantite']; ?> unités</span>
-            <form action="gestion_stock.php" method="post" style="display:inline;">
-                <input type="hidden" name="stock_id" value="<?php echo (int)$s['stock_id']; ?>">
-                <input type="number" name="nouveau_stock" min="0" value="<?php echo (int)$s['quantite']; ?>">
-                <button type="submit">Modifier</button>
-            </form>
-        </div>
-    <?php endforeach; ?>
-        </div>
-    </div>
-</div>
-<?php endif; ?>
+            <div id="popup-stock" class="popup-stock popup-hide">
+                <div class="popup-overlay-stock"></div>
+                <div class="popup-content-stock">
+                    <div class="popup-header-stock">
+                        <h2>Gestion des stocks - <span id="nom-magasin-stock"></span></h2>
+                        <button class="btn-fermer-stock">&times;</button>
+                    </div>
+                    <div class="contenu-stock">
+                        <?php foreach ($stocks as $s): ?>
+                        <div class="stock-item">
+                            <span><?php echo htmlspecialchars($s['confiserie_nom']); ?> :
+                                <?php echo (int)$s['quantite']; ?> unités</span>
+                            <form action="gestion_stock.php" method="post" style="display:inline;">
+                                <input type="hidden" name="stock_id" value="<?php echo (int)$s['stock_id']; ?>">
+                                <input type="number" name="nouveau_stock" min="0"
+                                    value="<?php echo (int)$s['quantite']; ?>">
+                                <button type="submit">Modifier</button>
+                            </form>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
 
-<script src="script.js"></script>
+            <script src="script.js"></script>
 
 
 </main>
@@ -196,18 +200,16 @@ $boutiques_select = dbquery("SELECT id, nom FROM boutiques ORDER BY nom ASC");
 
 
 <style>
-
 body {
     font-family: Arial, sans-serif;
-    background-color:rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
     margin: 0;
     padding: 0px;
 }
 
-.titre h2{
+.titre h2 {
     border-bottom: none;
 }
-
 </style>
 
 </body>

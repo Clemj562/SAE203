@@ -18,10 +18,11 @@ $user_connected = isset($_SESSION['user_id']);
 $user_role = $user_connected ? $_SESSION['user_role'] : null;
 $user_id = $user_connected ? $_SESSION['user_id'] : null;
 
-$user_info = dbquery("SELECT utilisateurs.id , utilisateurs.username, utilisateurs.prenom, utilisateurs.role, utilisateurs.id, utilisateurs.nom 
+$user_info = dbquery("SELECT utilisateurs.id, utilisateurs.username, utilisateurs.prenom, utilisateurs.role, utilisateurs.nom 
 FROM utilisateurs 
-JOIN boutiques ON utilisateurs.id = boutiques.utilisateur_id
-WHERE utilisateurs.id = ?", [$_SESSION['user_id']]);
+WHERE utilisateurs.id = ?", [$user_id]);
+
+$ui = $user_info ? $user_info[0] : null;
 
 $boutiques_gerant = dbquery("
                 SELECT id, nom 
@@ -42,7 +43,7 @@ $boutiques_gerant = dbquery("
                     <img src="./media/img/ourson.png" alt="Image d'Ourson">
                 </div>
                 <div class="hero-content">
-                    <h1>Bienvenue chez <span class="confiz">Confiz'</span></h1>
+                    <h1>Bienvenue <?php echo htmlspecialchars($ui['username']); ?> chez <span class="confiz">Confiz'</span></h1>
                     <p>Découvrez nos confiseries, différents choix pour différents goûts !</p>
                     <div class="hero-buttons">
                         <a href="catalogue.php?id-catalogue=1"><button class="hero-btn">Voir le catalogue</button></a>
