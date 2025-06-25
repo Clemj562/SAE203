@@ -159,24 +159,17 @@ $boutiques_select = dbquery("SELECT id, nom FROM boutiques ORDER BY nom ASC");
             <h2>Gestion des stocks - <span id="nom-magasin-stock"></span></h2>
             <button class="btn-fermer-stock">&times;</button>
         </div>
-        <div class="contenu-popup-stock">
-            <div class="liste-stocks">
-                <?php foreach ($stocks as $s): ?>
-                    <div class="item-stock" data-stock-id="<?php echo($s['stock_id'])?>">
-                        <div class="info-produit">
-                            <span class="nom-confiserie"><?php echo($s['confiserie_nom'])?></span>
-                        </div>
-                        <div class="gestion-quantite">
-                            <button class="btn-diminuer" data-action="diminuer">-</button>
-                            <input type="number" class="quantite-input" value="<?php echo($s['quantite'])?>" min="0">
-                            <button class="btn-augmenter" data-action="augmenter">+</button>
-                        </div>
-                        <div class="actions-stock">
-                            <button class="btn-sauvegarder" data-stock-id="<?php echo($s['stock_id'])?>">Sauvegarder</button>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
+        <div class="contenu-stock">
+            <?php foreach ($stocks as $s): ?>
+        <div class="stock-item">
+            <span><?php echo htmlspecialchars($s['confiserie_nom']); ?> : <?php echo (int)$s['quantite']; ?> unités</span>
+            <form action="gestion_stock.php" method="post" style="display:inline;">
+                <input type="hidden" name="stock_id" value="<?php echo (int)$s['stock_id']; ?>">
+                <input type="number" name="nouveau_stock" min="0" value="<?php echo (int)$s['quantite']; ?>">
+                <button type="submit">Modifier</button>
+            </form>
+        </div>
+    <?php endforeach; ?>
         </div>
     </div>
 </div>
